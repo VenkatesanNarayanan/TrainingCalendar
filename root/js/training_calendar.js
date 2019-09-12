@@ -1,6 +1,6 @@
 
 // Client ID and API key from the Developer Console
-var CLIENT_ID = 'Please add CLIENT_ID here';
+var CLIENT_ID = '504766245284-7fbuta5fv818aeb879vvn03af7mkhuvq.apps.googleusercontent.com';
 
 // Array of API discovery doc URLs for APIs used by the quickstart
 var DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
@@ -118,6 +118,8 @@ function listData() {
                 $("#date" + iteration).text(date_arr[1] + '-' + date_arr[0]);
                 $("#p" + iteration).text(row[1]);
                 $("#span" + iteration).text(row[2]);
+                var day_no = new Date(date).getDay();
+                $('#day_name'+ iteration).text(weekday[day_no]);
                 iteration++;
             }
             $(".loader").hide();
