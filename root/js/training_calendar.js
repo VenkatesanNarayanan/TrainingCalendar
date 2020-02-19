@@ -11,9 +11,32 @@ var SCOPES = "https://www.googleapis.com/auth/spreadsheets.readonly";
 var authorizeButton;
 var signoutButton;
 $(document).ready(function() {
-     $(".container").hide();
+     $(".cal-content").hide();
     authorizeButton = document.getElementById('authorize_button');
     signoutButton = document.getElementById('signout_button');
+
+    $("#next").click(function(){
+        if(current_end_row_no >= total_rows) {
+            alert('Reached end of page');
+        } else {
+            current_start_row_no = current_start_row_no + 4;
+            render_schedule();
+        }
+    });
+
+    $("#prev").click(function(){
+        if(current_start_row_no <= 1) {
+            alert('Reached starting of page');
+        } else {
+            current_start_row_no = current_start_row_no - 4;
+            render_schedule();
+        }
+    });
+
+    $("#cur_week_button").click(function(){
+        current_start_row_no = current_week;
+        render_schedule();
+    });
    
 });
 
@@ -78,7 +101,8 @@ function handleSignoutClick(event) {
     gapi.auth2.getAuthInstance().signOut();
     $("#message").text("Please Authorize to see Training Calender");
     $(".loader").show();
-    $(".container").hide();
+    $(".cal-content").hide();
+
 }
 
 /**
@@ -103,7 +127,10 @@ function appendPre(message) {
 // Training calender's data fetching and Display logic starts here                   //
 //***********************************************************************************//
 
-var current_row_no;
+var current_start_row_no;
+var current_end_row_no;
+var current_week;
+var total_rows;
 var sheet_data;
 
 function listData() {
@@ -112,12 +139,12 @@ function listData() {
         range: 'Training!C2:E',
     }).then(function(response) {
         sheet_data = response.result;
-        if (sheet_data.values.length > 0) {
+        total_rows = sheet_data.values.length - 1;
+        if (total_rows > 0) {
             var cur_date_obj = new Date();
             var cur_date = cur_date_obj.getFullYear() + "" + cur_date_obj.getMonth() + "" + cur_date_obj.getDate();
             // appendPre('Name, Major:');
-            var len = sheet_data.values.length;
-            var loop_start_val = len - 4;
+            var loop_start_val = total_rows - 4;
             var iteration = 1;
             
             for (i = loop_start_val; i > 0; i--) {
@@ -130,16 +157,18 @@ function listData() {
 
                 if(cur_date >= sch_date){
                     if(cur_date > sch_date){
-                        current_row_no = i + 1;
+                        current_start_row_no = i + 1;
                     } else {
-                        current_row_no = i;
+                        current_start_row_no = i;
                     }
+                    current_week = current_start_row_no;
                     render_schedule();
                     break;
                 }
             }
             $(".loader").hide();
-            $(".container").show();
+            $(".cal-content").show();
+
         } else {
             alert('No data found. contact support');
         }
@@ -155,10 +184,17 @@ function render_schedule() {
     }
 
     var weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-    var start_row = current_row_no;
-    var loop_end = start_row + 4;
+    var cur_row = current_start_row_no;
+    var loop_end = cur_row + 4;
     for (i=1; i <= 4; i++){
-        var row = sheet_data.values[start_row];
+        if(cur_row > total_rows){
+            console.log(cur_row);
+           $(".sc"+i).hide();
+           break;
+        } else {
+            $(".sc" + i).show();
+        }
+        var row = sheet_data.values[cur_row];
         var date = row[0];
         var date_arr = date.split("-");
         $("#date" + i).text(date_arr[1] + '-' + date_arr[0]);
@@ -167,6 +203,8 @@ function render_schedule() {
         var sch_date_obj = new Date(date);
         var day_no = sch_date_obj.getDay();
         $('#day_name'+ i).text(weekday[day_no]);
-        start_row++;
+        cur_row++;
     }
+    current_end_row_no = cur_row;
 }
+

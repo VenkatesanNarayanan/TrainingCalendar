@@ -10,14 +10,20 @@
 	</head>
 	<body>
 		<div class="authorize_div">
-				<button class="button" id="authorize_button" style="display: none;">Authorize</button>
-				<button class="button" id="signout_button" style="display: none;">Sign Out</button>
+				<div style="float:right;">
+				<button class="signin" id="authorize_button" style="display: none;">Authorize</button>
+				<button class="signin" id="signout_button" style="display: none;">Sign Out</button>
+				</div>
+				<div  id="cur_week_button" class="cal-content" style="float:left; padding-right: 10px">
+				<button class="signin">Current Week</button>
+				</div>
 		</div>
 		<div class="loader">
 			<h2><span id="message">Please Wait, Loading Data ...</span></h2>
 		</div>
-		<div class="container hide">
-			<div class="box">
+		<button id="prev" class="cal-content scroll previous round hide">&#8249;</button>
+		<div class="cal-content container hide">
+			<div class="box sc1">
 				<div class="content">
 					<h2><span id="date1">25</span></h2>
 					<h3 id="day_name1">Monday</h3>
@@ -25,7 +31,7 @@
 					<p id="p1">Version checking to end of chapter</p>
 				</div>
 			</div>
-			<div class="box">
+			<div class="box sc2">
 				<div class="content">
 					<h2><span id="date2">26</span></h2>
 					<h3 id="day_name2">Thursday</h3>
@@ -33,7 +39,7 @@
 					<p id="p2">Object - Introduction to Object Constructions<br></p>
 				</div>
 			</div>
-			<div class="box">
+			<div class="box sc3">
 				<div class="content">
 					<h2><span id="date3">27</span></h2>
 					<h3 id="day_name3">Monday</h3>
@@ -41,7 +47,7 @@
 					<p id="p3">Object - Class inheritance</p>
 				</div>
 			</div>
-			<div class="box">
+			<div class="box sc4">
 				<div class="content">
 					<h2><span id="date4">28</span></h2>
 					<h3 id="day_name4">Thursday</h3>
@@ -50,10 +56,7 @@
 				</div>
 			</div>
 		</div>
-		<!-- <div>  -->
-		
-		
-		<!-- <pre id="content" style="white-space: pre-wrap;"></pre> -->
+		<button id="next" class="cal-content next round scroll hide"> &#8250; </button>
 	</body>
 	
 	<script async defer src="https://apis.google.com/js/api.js"
