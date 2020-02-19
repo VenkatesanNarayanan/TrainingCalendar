@@ -1,6 +1,6 @@
 
-// Client ID and API key from the Developer Console
-var CLIENT_ID = '504766245284-7fbuta5fv818aeb879vvn03af7mkhuvq.apps.googleusercontent.com';
+// Client ID from the Developer Console
+var CLIENT_ID = '';
 
 // Array of API discovery doc URLs for APIs used by the quickstart
 var DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
@@ -93,34 +93,50 @@ function appendPre(message) {
     // pre.appendChild(textContent);
 }
 
+// Example script
 /**
  * Print the names and majors of students in a sample spreadsheet:
  * https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
  */
+
+//***********************************************************************************//
+// Training calender's data fetching and Display logic starts here                   //
+//***********************************************************************************//
+
+var current_row_no;
+var sheet_data;
+
 function listData() {
     gapi.client.sheets.spreadsheets.values.get({
         spreadsheetId: '1tWPmEdTJo0-i9_skMZdeM0NvGs_tdLbSLW6I8-SlDuU',
         range: 'Training!C2:E',
     }).then(function(response) {
-        var range = response.result;
-        console.log(range);
-        if (range.values.length > 0) {
+        sheet_data = response.result;
+        if (sheet_data.values.length > 0) {
+            var cur_date_obj = new Date();
+            var cur_date = cur_date_obj.getFullYear() + "" + cur_date_obj.getMonth() + "" + cur_date_obj.getDate();
             // appendPre('Name, Major:');
-            var len = range.values.length;
+            var len = sheet_data.values.length;
             var loop_start_val = len - 4;
             var iteration = 1;
-            var weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-            for (i = loop_start_val; i < len; i++) {
-                var row = range.values[i];
+            
+            for (i = loop_start_val; i > 0; i--) {
+                var row = sheet_data.values[i];
                 var date = row[0];
                 var date_arr = date.split("-");
-                 // console.log('#date', iteration, date_arr[0] + '-' + date_arr[1]);
-                $("#date" + iteration).text(date_arr[1] + '-' + date_arr[0]);
-                $("#p" + iteration).text(row[1]);
-                $("#span" + iteration).text(row[2]);
-                var day_no = new Date(date).getDay();
-                $('#day_name'+ iteration).text(weekday[day_no]);
-                iteration++;
+
+                var sch_date_obj = new Date(date);
+                var sch_date = sch_date_obj.getFullYear() + ""  + sch_date_obj.getMonth() + "" + sch_date_obj.getDate();
+
+                if(cur_date >= sch_date){
+                    if(cur_date > sch_date){
+                        current_row_no = i + 1;
+                    } else {
+                        current_row_no = i;
+                    }
+                    render_schedule();
+                    break;
+                }
             }
             $(".loader").hide();
             $(".container").show();
@@ -130,4 +146,27 @@ function listData() {
     }, function(response) {
         console.log('Error: ' , response.result.error.message);
     });
+}
+
+function render_schedule() {
+
+    if(sheet_data.values.length <= 0) {
+        return;
+    }
+
+    var weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    var start_row = current_row_no;
+    var loop_end = start_row + 4;
+    for (i=1; i <= 4; i++){
+        var row = sheet_data.values[start_row];
+        var date = row[0];
+        var date_arr = date.split("-");
+        $("#date" + i).text(date_arr[1] + '-' + date_arr[0]);
+        $("#p" + i).text(row[1]);
+        $("#span" + i).text(row[2]);
+        var sch_date_obj = new Date(date);
+        var day_no = sch_date_obj.getDay();
+        $('#day_name'+ i).text(weekday[day_no]);
+        start_row++;
+    }
 }
