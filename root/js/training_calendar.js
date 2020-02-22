@@ -153,6 +153,7 @@ function listData() {
                 var date_arr = date.split("-");
 
                 var sch_date_obj = new Date(date);
+                sch_date_obj.setFullYear(date_arr[2]);
                 var sch_date = sch_date_obj.getFullYear() + ""  + sch_date_obj.getMonth() + "" + sch_date_obj.getDate();
 
                 if(cur_date >= sch_date){
@@ -187,23 +188,23 @@ function render_schedule() {
     var cur_row = current_start_row_no;
     var loop_end = cur_row + 4;
     for (i=1; i <= 4; i++){
+
         if(cur_row > total_rows){
-            console.log(cur_row);
-           $(".sc"+i).hide();
-           break;
+            $(".sc"+i).hide();
         } else {
             $(".sc" + i).show();
+            var row = sheet_data.values[cur_row];
+            var date = row[0];
+            var date_arr = date.split("-");
+            $("#date" + i).text(date_arr[1] + '-' + date_arr[0]);
+            $("#p" + i).text(row[1]);
+            $("#span" + i).text(row[2]);
+            var sch_date_obj = new Date(date);
+            sch_date_obj.setFullYear(date_arr[2]);
+            var day_no = sch_date_obj.getDay();
+            $('#day_name'+ i).text(weekday[day_no]);
+            cur_row++;
         }
-        var row = sheet_data.values[cur_row];
-        var date = row[0];
-        var date_arr = date.split("-");
-        $("#date" + i).text(date_arr[1] + '-' + date_arr[0]);
-        $("#p" + i).text(row[1]);
-        $("#span" + i).text(row[2]);
-        var sch_date_obj = new Date(date);
-        var day_no = sch_date_obj.getDay();
-        $('#day_name'+ i).text(weekday[day_no]);
-        cur_row++;
     }
     current_end_row_no = cur_row;
 }
