@@ -1,6 +1,6 @@
 
 // Client ID from the Developer Console
-var CLIENT_ID = '';
+var CLIENT_ID = '504766245284-7fbuta5fv818aeb879vvn03af7mkhuvq.apps.googleusercontent.com';
 
 // Array of API discovery doc URLs for APIs used by the quickstart
 var DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
@@ -16,7 +16,7 @@ $(document).ready(function() {
     signoutButton = document.getElementById('signout_button');
 
     $("#next").click(function(){
-        if(current_end_row_no >= total_rows) {
+        if(current_end_row_no > total_rows) {
             alert('Reached end of page');
         } else {
             current_start_row_no = current_start_row_no + 4;
