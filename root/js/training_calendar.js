@@ -1,4 +1,3 @@
-
 // Client ID from the Developer Console
 var CLIENT_ID = '504766245284-7fbuta5fv818aeb879vvn03af7mkhuvq.apps.googleusercontent.com';
 
@@ -11,12 +10,12 @@ var SCOPES = "https://www.googleapis.com/auth/spreadsheets.readonly";
 var authorizeButton;
 var signoutButton;
 $(document).ready(function() {
-     $(".cal-content").hide();
+    $(".cal-content").hide();
     authorizeButton = document.getElementById('authorize_button');
     signoutButton = document.getElementById('signout_button');
 
-    $("#next").click(function(){
-        if(current_end_row_no > total_rows) {
+    $("#next").click(function() {
+        if (current_end_row_no > total_rows) {
             alert('Reached end of page');
         } else {
             current_start_row_no = current_start_row_no + 4;
@@ -24,8 +23,8 @@ $(document).ready(function() {
         }
     });
 
-    $("#prev").click(function(){
-        if(current_start_row_no <= 1) {
+    $("#prev").click(function() {
+        if (current_start_row_no <= 1) {
             alert('Reached starting of page');
         } else {
             current_start_row_no = current_start_row_no - 4;
@@ -33,11 +32,11 @@ $(document).ready(function() {
         }
     });
 
-    $("#cur_week_button").click(function(){
+    $("#cur_week_button").click(function() {
         current_start_row_no = current_week;
         render_schedule();
     });
-   
+
 });
 
 /**
@@ -57,7 +56,7 @@ function initClient() {
         clientId: CLIENT_ID,
         discoveryDocs: DISCOVERY_DOCS,
         scope: SCOPES
-    }).then(function () {
+    }).then(function() {
         // Listen for sign-in state changes.
         gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
 
@@ -78,7 +77,7 @@ function initClient() {
 function updateSigninStatus(isSignedIn) {
     if (isSignedIn) {
         authorizeButton.style.display = 'none';
-        signoutButton.style.display = 'block';  
+        signoutButton.style.display = 'block';
         listData();
     } else {
         authorizeButton.style.display = 'block';
@@ -142,11 +141,21 @@ function listData() {
         total_rows = sheet_data.values.length - 1;
         if (total_rows > 0) {
             var cur_date_obj = new Date();
-            var cur_date = cur_date_obj.getFullYear() + "" + cur_date_obj.getMonth() + "" + cur_date_obj.getDate();
+            var cur_year = cur_date_obj.getFullYear();
+            var cur_month = cur_date_obj.getMonth() + 1;
+            var cur_day = cur_date_obj.getDate();
+            if (cur_month < 10) {
+                cur_month = "0" + cur_month;
+            };
+            if (cur_day < 10) {
+                cur_day = "0" + cur_day;
+            };
+
+            var cur_date = cur_year + "" + cur_month + "" + cur_day;
             // appendPre('Name, Major:');
             var loop_start_val = total_rows - 4;
             var iteration = 1;
-            
+
             for (i = loop_start_val; i > 0; i--) {
                 var row = sheet_data.values[i];
                 var date = row[0];
@@ -154,10 +163,22 @@ function listData() {
 
                 var sch_date_obj = new Date(date);
                 sch_date_obj.setFullYear(date_arr[2]);
-                var sch_date = sch_date_obj.getFullYear() + ""  + sch_date_obj.getMonth() + "" + sch_date_obj.getDate();
+                var sch_year = sch_date_obj.getFullYear();
+                var sch_month = sch_date_obj.getMonth() + 1;
+                var sch_day = sch_date_obj.getDate();
+                if (sch_month < 10) {
+                    sch_month = "0" + sch_month;
+                };
+                if (sch_day < 10) {
+                    sch_day = "0" + sch_day;
+                };
 
-                if(cur_date >= sch_date){
-                    if(cur_date > sch_date){
+
+                var sch_date = sch_year + "" + sch_month + "" + sch_day;
+
+                if (cur_date >= sch_date) {
+
+                    if (cur_date > sch_date) {
                         current_start_row_no = i + 1;
                     } else {
                         current_start_row_no = i;
@@ -174,23 +195,23 @@ function listData() {
             alert('No data found. contact support');
         }
     }, function(response) {
-        console.log('Error: ' , response.result.error.message);
+        console.log('Error: ', response.result.error.message);
     });
 }
 
 function render_schedule() {
 
-    if(sheet_data.values.length <= 0) {
+    if (sheet_data.values.length <= 0) {
         return;
     }
 
-    var weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    var weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     var cur_row = current_start_row_no;
     var loop_end = cur_row + 4;
-    for (i=1; i <= 4; i++){
+    for (i = 1; i <= 4; i++) {
 
-        if(cur_row > total_rows){
-            $(".sc"+i).hide();
+        if (cur_row > total_rows) {
+            $(".sc" + i).hide();
         } else {
             $(".sc" + i).show();
             var row = sheet_data.values[cur_row];
@@ -202,10 +223,9 @@ function render_schedule() {
             var sch_date_obj = new Date(date);
             sch_date_obj.setFullYear(date_arr[2]);
             var day_no = sch_date_obj.getDay();
-            $('#day_name'+ i).text(weekday[day_no]);
+            $('#day_name' + i).text(weekday[day_no]);
             cur_row++;
         }
     }
     current_end_row_no = cur_row;
 }
-
