@@ -1,0 +1,66 @@
+<html>
+	<head>
+		<title>Training Calender</title>
+		<link rel="icon" href="http://dev01.blr.exceleron.in:8000/favicon.ico?v=2">
+		<link rel="stylesheet" type="text/css" href="root/css/training_calendar.css">
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+		<script src="root/js/training_calendar.js"></script>
+	</head>
+	<body>
+		<div class="authorize_div">
+				<div style="float:right;">
+				<button class="signin" id="authorize_button" style="display: none;">Authorize</button>
+				<button class="signin" id="signout_button" style="display: none;">Sign Out</button>
+				</div>
+				<div  id="cur_week_button" class="cal-content" style="float:left; padding-right: 10px">
+				<button class="signin">Current Week</button>
+				</div>
+		</div>
+		<div class="loader">
+			<h2><span id="message">Please Wait, Loading Data ...</span></h2>
+		</div>
+		<button id="prev" class="cal-content scroll previous round hide">&#8249;</button>
+		<div class="cal-content container hide">
+			<div class="box sc1">
+				<div class="content">
+					<h2><span id="date1">25</span></h2>
+					<h3 id="day_name1">Monday</h3>
+					<a href="#"><span id="span1">NA</span></a>
+					<p id="p1">Version checking to end of chapter</p>
+				</div>
+			</div>
+			<div class="box sc2">
+				<div class="content">
+					<h2><span id="date2">26</span></h2>
+					<h3 id="day_name2">Thursday</h3>
+					<a href="#"><span id="span2">NA</span></a>
+					<p id="p2">Object - Introduction to Object Constructions<br></p>
+				</div>
+			</div>
+			<div class="box sc3">
+				<div class="content">
+					<h2><span id="date3">27</span></h2>
+					<h3 id="day_name3">Monday</h3>
+					<a href="#"><span id="span3">NA</span></a>
+					<p id="p3">Object - Class inheritance</p>
+				</div>
+			</div>
+			<div class="box sc4">
+				<div class="content">
+					<h2><span id="date4">28</span></h2>
+					<h3 id="day_name4">Thursday</h3>
+					<a href="#"><span id="span4">NA</span></a>
+					<p id="p4">Object - Instance Destructors to End of chapter </p>
+				</div>
+			</div>
+		</div>
+		<button id="next" class="cal-content next round scroll hide"> &#8250; </button>
+	</body>
+	
+	<script async defer src="https://apis.google.com/js/api.js"
+			onload="this.onload=function(){};handleClientLoad()"
+			onreadystatechange="if (this.readyState === 'complete') this.onload()">
+	</script>
+</html>
